@@ -19,6 +19,14 @@ public class ProductsController {
         this.productService = productService;
     }
 
+    @GetMapping
+    public ResponseEntity<Product> getProducts(@RequestHeader("Authorization") String token) {
+        if (authenticationService.isAuthenticated(token)) {
+            return ResponseEntity.of(productService.findProduct(2));
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+    
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable int productId) {
         Optional<Product> product = productService.findProduct(productId);
